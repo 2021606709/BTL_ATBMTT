@@ -736,7 +736,6 @@ public class Form extends javax.swing.JFrame {
     private void cbHamBamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHamBamActionPerformed
         // TODO add your handling code here:
         chonHamBam = cbHamBam.getSelectedItem().toString();
-        JOptionPane.showMessageDialog(rootPane, chonHamBam);
     }//GEN-LAST:event_cbHamBamActionPerformed
 
     private void btnTaoKhoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoKhoaActionPerformed
@@ -770,7 +769,17 @@ public class Form extends javax.swing.JFrame {
                 //JOptionPane.showMessageDialog(rootPane, sha1);
                 //BigInteger dsrsa = new BigInteger(taChuKy.getText());
                 //taChuKy.getText();
-                taChuKyGiaiMa.setText(algorithmRSA.decrypt(taChuKy.getText()));
+                // Lấy chuỗi thập lục phân từ taChuKy.getText()
+                String hexSignature = taChuKy.getText();
+
+                // Chuyển đổi chuỗi thập lục phân thành BigInteger
+                BigInteger signatureBigInt = new BigInteger(hexSignature, 16);
+
+                // Chuyển đổi BigInteger thành chuỗi thập phân
+                String decimalSignature = signatureBigInt.toString(10);
+                
+                taChuKyGiaiMa.setText(algorithmRSA.decrypt(decimalSignature));
+                //taChuKyGiaiMa.setText(algorithmRSA.decrypt(taChuKy.getText()));
                 if (taHash2.getText().equals(taChuKyGiaiMa.getText())) {
                     JOptionPane.showMessageDialog(null, "Chữ ký vẹn toàn không thay đổi!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 } else {
@@ -861,7 +870,7 @@ public class Form extends javax.swing.JFrame {
 //            }
 //        }
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Supported Files","pdf", "exe", "doc", "docx", "xls", "xlsx", "jpg", "png", "mp3", "mp4", "flv", "ico", "txt");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Supported Files", "pdf", "exe", "doc", "docx", "xls", "xlsx", "jpg", "png", "mp3", "mp4", "flv", "ico", "txt");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {

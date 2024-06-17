@@ -76,15 +76,15 @@ public class AlgorithmRSA {
      * Encrypt the given plaintext message.
      */
     public synchronized String encrypt(String message) {
-        return (new BigInteger(message.getBytes())).modPow(d, n).toString();
-//// Chuyển chuỗi thông điệp thành mảng byte và sau đó thành đối tượng BigInteger
-//        BigInteger messageBigInt = new BigInteger(message.getBytes());
-//
-//        // Tính toán mã hóa với modPow
-//        BigInteger encryptedBigInt = messageBigInt.modPow(d, n);
-//
-//        // Chuyển đổi kết quả sang chuỗi thập lục phân và trả về
-//        return encryptedBigInt.toString(16);
+        //return (new BigInteger(message.getBytes())).modPow(d, n).toString();
+// Chuyển chuỗi thông điệp thành mảng byte và sau đó thành đối tượng BigInteger
+        BigInteger messageBigInt = new BigInteger(message.getBytes());
+
+        // Tính toán mã hóa với modPow
+        BigInteger encryptedBigInt = messageBigInt.modPow(d, n);
+
+        // Chuyển đổi kết quả sang chuỗi thập lục phân và trả về
+        return encryptedBigInt.toString(16);
     }
 
     /**
