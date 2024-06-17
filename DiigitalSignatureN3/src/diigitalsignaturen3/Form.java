@@ -736,7 +736,6 @@ public class Form extends javax.swing.JFrame {
     private void cbHamBamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHamBamActionPerformed
         // TODO add your handling code here:
         chonHamBam = cbHamBam.getSelectedItem().toString();
-        JOptionPane.showMessageDialog(rootPane, chonHamBam);
     }//GEN-LAST:event_cbHamBamActionPerformed
 
     private void btnTaoKhoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoKhoaActionPerformed
