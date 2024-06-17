@@ -104,10 +104,10 @@ public class AlgorithmRSA {
     /**
      * Decrypt the given ciphertext message.
      */
-    public synchronized String decrypt(BigInteger message) {
-        //return message.modPow(e, n);
-        BigInteger decryptedBigInt = message.modPow(e, n);
-        return decryptedBigInt.toString(16);
+    public synchronized BigInteger decrypt(BigInteger message) {
+        return message.modPow(e, n);
+//        BigInteger decryptedBigInt = message.modPow(e, n);
+//        return decryptedBigInt.toString(16);
     }
 
     /**

@@ -224,8 +224,18 @@ public class Form extends javax.swing.JFrame {
         });
 
         btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         btnThoat.setText("Thoát");
+        btnThoat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThoatActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -611,139 +621,118 @@ public class Form extends javax.swing.JFrame {
             File file = chooser.getSelectedFile();
             String attach = file.toString();
             txtFileTao.setText(attach);
-            extension = getFileExtension(file);
-
-            try {
-                if (extension.equals("doc") || extension.equals("docx")) {
-                    readWordFile(file);
-                } else if (extension.equals("xls") || extension.equals("xlsx")) {
-                    readExcelFile(file);
-                } else if (extension.equals("pdf")) {
-                    readPdfFile(file);
-                } else if (extension.equals("jpg") || extension.equals("png")) {
-                    readImageFile(file);
-                } else if (extension.equals("jpg") || extension.equals("png")) {
-                    readImageFile(file);
-                } else if (extension.equals("txt")) {
-                    readTextFile(file); // Thêm phần xử lý cho file .txt
-                } else {
-                    System.out.println("Unsupported file type.");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }//GEN-LAST:event_btnMoFileTaoActionPerformed
     //Các hàm hỗ trợ cho việc đọc file
-    public String getFileExtension(File file) {
-        String fileName = file.getName();
-        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
-            return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-        } else {
-            return "";
-        }
-    }
-
-    public static void readWordFile(File file) throws IOException {
-        try (FileInputStream fis = new FileInputStream(file)) {
-            if (file.getName().endsWith(".docx")) {
-                XWPFDocument document = new XWPFDocument(fis);
-                XWPFWordExtractor extractor = new XWPFWordExtractor(document);
-                showTextContent(extractor.getText());
-            } else if (file.getName().endsWith(".doc")) {
-                HWPFDocument document = new HWPFDocument(fis);
-                WordExtractor extractor = new WordExtractor(document);
-                showTextContent(extractor.getText());
-            }
-        }
-    }
-
-    public static void readExcelFile(File file) throws IOException {
-        try (FileInputStream fis = new FileInputStream(file)) {
-            Workbook workbook;
-            if (file.getName().endsWith(".xlsx")) {
-                workbook = new XSSFWorkbook(fis);
-            } else {
-                workbook = new HSSFWorkbook(fis);
-            }
-            Sheet sheet = workbook.getSheetAt(0);
-            StringBuilder content = new StringBuilder();
-            for (Row row : sheet) {
-                for (Cell cell : row) {
-                    switch (cell.getCellTypeEnum()) {
-                        case STRING ->
-                            content.append(cell.getStringCellValue()).append("\t");
-                        case NUMERIC ->
-                            content.append(cell.getNumericCellValue()).append("\t");
-                        case BOOLEAN ->
-                            content.append(cell.getBooleanCellValue()).append("\t");
-                        default ->
-                            content.append("Unknown value").append("\t");
-                    }
-                }
-                content.append("\n");
-            }
-            showTextContent(content.toString());
-        }
-    }
-
-    public void readTextFile(File file) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            StringBuilder content = new StringBuilder();
-            String line;
-            String lineSeparator = System.lineSeparator(); // Sử dụng dấu xuống dòng phù hợp với hệ điều hành
-            while ((line = reader.readLine()) != null) {
-                content.append(line).append(lineSeparator); // Thêm dấu xuống dòng chính xác sau mỗi dòng
-            }
-
-            // Hiển thị nội dung trong JTextArea
-            showTextContent(content.toString());
-            JOptionPane.showMessageDialog(null, "Đọc file thành công!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Lỗi khi đọc file!");
-        }
-    }
-
-    private static String readPdfFile(File file) throws IOException {
-        try (PDDocument document = PDDocument.load(file)) {
-            if (!document.isEncrypted()) {
-                PDFTextStripper pdfStripper = new PDFTextStripper();
-                String text = pdfStripper.getText(document);
-                return text;
-            } else {
-                throw new IOException("PDF document is encrypted, cannot read text.");
-            }
-        }
-    }
-
-    public static void readImageFile(File file) throws IOException {
-        BufferedImage image = ImageIO.read(file);
-        if (image != null) {
-            ImageIcon icon = new ImageIcon(image);
-            JLabel label = new JLabel(icon);
-            JFrame frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.getContentPane().add(label);
-            frame.setTitle("NỘI DUNG FILE IMAGE");
-            frame.pack();
-            frame.setVisible(true);
-        } else {
-            System.out.println("The file is not a valid image.");
-        }
-    }
-
-    public static void showTextContent(String content) {
-        JTextArea textArea = new JTextArea(content);
-        textArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setTitle("NỘI DUNG FILE");
-        frame.add(scrollPane);
-        frame.setSize(500, 400);
-        frame.setVisible(true);
-    }
+//    public String getFileExtension(File file) {
+//        String fileName = file.getName();
+//        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+//            return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+//        } else {
+//            return "";
+//        }
+//    }
+//
+//    public static void readWordFile(File file) throws IOException {
+//        try (FileInputStream fis = new FileInputStream(file)) {
+//            if (file.getName().endsWith(".docx")) {
+//                XWPFDocument document = new XWPFDocument(fis);
+//                XWPFWordExtractor extractor = new XWPFWordExtractor(document);
+//                showTextContent(extractor.getText());
+//            } else if (file.getName().endsWith(".doc")) {
+//                HWPFDocument document = new HWPFDocument(fis);
+//                WordExtractor extractor = new WordExtractor(document);
+//                showTextContent(extractor.getText());
+//            }
+//        }
+//    }
+//
+//    public static void readExcelFile(File file) throws IOException {
+//        try (FileInputStream fis = new FileInputStream(file)) {
+//            Workbook workbook;
+//            if (file.getName().endsWith(".xlsx")) {
+//                workbook = new XSSFWorkbook(fis);
+//            } else {
+//                workbook = new HSSFWorkbook(fis);
+//            }
+//            Sheet sheet = workbook.getSheetAt(0);
+//            StringBuilder content = new StringBuilder();
+//            for (Row row : sheet) {
+//                for (Cell cell : row) {
+//                    switch (cell.getCellTypeEnum()) {
+//                        case STRING ->
+//                            content.append(cell.getStringCellValue()).append("\t");
+//                        case NUMERIC ->
+//                            content.append(cell.getNumericCellValue()).append("\t");
+//                        case BOOLEAN ->
+//                            content.append(cell.getBooleanCellValue()).append("\t");
+//                        default ->
+//                            content.append("Unknown value").append("\t");
+//                    }
+//                }
+//                content.append("\n");
+//            }
+//            showTextContent(content.toString());
+//        }
+//    }
+//
+//    public void readTextFile(File file) throws IOException {
+//        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+//            StringBuilder content = new StringBuilder();
+//            String line;
+//            String lineSeparator = System.lineSeparator(); // Sử dụng dấu xuống dòng phù hợp với hệ điều hành
+//            while ((line = reader.readLine()) != null) {
+//                content.append(line).append(lineSeparator); // Thêm dấu xuống dòng chính xác sau mỗi dòng
+//            }
+//
+//            // Hiển thị nội dung trong JTextArea
+//            showTextContent(content.toString());
+//            JOptionPane.showMessageDialog(null, "Đọc file thành công!");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null, "Lỗi khi đọc file!");
+//        }
+//    }
+//
+//    private static String readPdfFile(File file) throws IOException {
+//        try (PDDocument document = PDDocument.load(file)) {
+//            if (!document.isEncrypted()) {
+//                PDFTextStripper pdfStripper = new PDFTextStripper();
+//                String text = pdfStripper.getText(document);
+//                return text;
+//            } else {
+//                throw new IOException("PDF document is encrypted, cannot read text.");
+//            }
+//        }
+//    }
+//
+//    public static void readImageFile(File file) throws IOException {
+//        BufferedImage image = ImageIO.read(file);
+//        if (image != null) {
+//            ImageIcon icon = new ImageIcon(image);
+//            JLabel label = new JLabel(icon);
+//            JFrame frame = new JFrame();
+//            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//            frame.getContentPane().add(label);
+//            frame.setTitle("NỘI DUNG FILE IMAGE");
+//            frame.pack();
+//            frame.setVisible(true);
+//        } else {
+//            System.out.println("The file is not a valid image.");
+//        }
+//    }
+//
+//    public static void showTextContent(String content) {
+//        JTextArea textArea = new JTextArea(content);
+//        textArea.setEditable(false);
+//        JScrollPane scrollPane = new JScrollPane(textArea);
+//        JFrame frame = new JFrame();
+//        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        frame.setTitle("NỘI DUNG FILE");
+//        frame.add(scrollPane);
+//        frame.setSize(500, 400);
+//        frame.setVisible(true);
+//    }
     private void cbHamBamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHamBamActionPerformed
         // TODO add your handling code here:
         chonHamBam = cbHamBam.getSelectedItem().toString();
@@ -779,12 +768,13 @@ public class Form extends javax.swing.JFrame {
             try {
                 taHash2.setText(sha1.md(chonHamBam, filename));
                 //JOptionPane.showMessageDialog(rootPane, sha1);
-                BigInteger dsrsa = new BigInteger(taChuKy.getText());
-                taChuKyGiaiMa.setText(algorithmRSA.decrypt(dsrsa).toString());
+                //BigInteger dsrsa = new BigInteger(taChuKy.getText());
+                //taChuKy.getText();
+                taChuKyGiaiMa.setText(algorithmRSA.decrypt(taChuKy.getText()));
                 if (taHash2.getText().equals(taChuKyGiaiMa.getText())) {
                     JOptionPane.showMessageDialog(null, "Chữ ký vẹn toàn không thay đổi!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(null, dsrsa, "Thông báo", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Chữ ký đã bị thay đổi!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                 }
 
             } catch (Exception ex) {
@@ -881,6 +871,27 @@ public class Form extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_btnMoFileCheckActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        cbKichThuocKhoa.setSelectedIndex(0);
+        taSoE.setText("");
+        taSoN.setText("");
+        taSoE1.setText("");
+        taSoD.setText("");
+        txtFileTao.setText("");
+        taHash.setText("");
+        taChuKy.setText("");
+        cbHamBam.setSelectedIndex(0);
+        txtFileCheck.setText("");
+        taHash2.setText("");
+        taChuKyGiaiMa.setText("");
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThoatActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnThoatActionPerformed
 
     /**
      * @param args the command line arguments
